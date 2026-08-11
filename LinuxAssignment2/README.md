@@ -1,30 +1,33 @@
-# 🐧 Linux User & Team Manager — Assignment 2
+# Linux User and Team Manager - Assignment 2
 
-> A Bash-based command-line utility (`userManager.sh`) that simulates team-based user management on Linux — creating groups as "teams," provisioning users with controlled home-directory permissions, and giving every user shared `team` and `ninja` collaboration directories.
-
----
-
-## 📌 Assignment Overview
-
-**Problem Statement: ASSIGNMENT 2**
-
-Create a utility, `userManager.sh`, that can:
-
-- **Add a Team** (simulated via a Linux group) — e.g. `team1`
-- **Add a User** (simulated via a Linux user) under a team — e.g. `Nitish` added to `team1`
-
-### Constraints to be met
-
-- A user should have **read, write, execute** access to their own home directory.
-- All users of the same team should have **read and execute** access to the home directories of fellow team members.
-- Others should have **only execute** permission on a user's home directory.
-- Every user's home directory should contain **two shared directories**:
-  - **`team`** — full access for members of the same team
-  - **`ninja`** — full access for all users across every team (a global "ninja" group)
+> A Bash script for managing Linux users and teams using groups, permissions, and shared directories.
 
 ---
 
-# 📂 Project Structure
+## Assignment Overview
+
+The task was to create a utility called `userManager.sh` for managing users and teams on Linux.
+
+The script supports:
+
+- Creating and deleting teams
+- Creating and deleting users
+- Managing user passwords and shells
+- Setting permissions on user home directories
+- Creating shared `team` and `ninja` directories
+
+### Permission Requirements
+
+- Users should have full access to their own home directory.
+- Users from the same team should be able to read and access each other's home directories.
+- Other users should only have execute access to a user's home directory.
+- Each user's home directory should contain:
+  - `team` - shared directory for users of the same team
+  - `ninja` - shared directory for users across all teams
+
+---
+
+## Project Structure
 
 ```text
 .
@@ -41,144 +44,232 @@ Create a utility, `userManager.sh`, that can:
 
 ---
 
-## ⚙️ Setup
+## Setup
+
+Give execute permission to the script:
 
 ```bash
 chmod +x userManager.sh
 ```
 
-Running an unrecognized command, or `addTeam` with no arguments, shows the expected usage and validation:
+Run the script using:
 
 ```bash
-./userManager.sh abc          # Invalid Command
-./userManager.sh addTeam      # Usage: ./userManager.sh addTeam <TeamName>
+./userManager.sh <command> <arguments>
+```
+
+For example:
+
+```bash
 ./userManager.sh addTeam amigo
 ```
 
-![](screenshots/01-setup-addteam.png)
+The script also checks invalid commands and missing arguments.
+
+```bash
+./userManager.sh abc
+./userManager.sh addTeam
+```
+
+![Add team](screenshots/01-setup-addteam.png)
 
 ---
 
-## 🧑‍🤝‍🧑 Team (Group) Commands
+## Team Commands
 
 | Command | Description |
 |---|---|
-| `addTeam <TeamName>` | Creates a new group (`groupadd`) to represent a team. Fails cleanly if the group already exists. |
-| `delTeam <TeamName>` | Deletes a group (`groupdel`). Fails cleanly if the group doesn't exist. |
-| `ls Team` | Lists all groups on the system (`cut -d: -f1 /etc/group`). |
+| `addTeam <TeamName>` | Creates a new Linux group as a team |
+| `delTeam <TeamName>` | Deletes an existing team |
+| `ls Team` | Lists the groups on the system |
+
+### Examples
 
 ```bash
 ./userManager.sh addTeam amigo
-./userManager.sh addTeam amigo     # Group already Exist
+./userManager.sh addTeam amigo
 ./userManager.sh delTeam amigo
-./userManager.sh delTeam amigo     # Group does not Exist
+./userManager.sh delTeam amigo
 ./userManager.sh ls Team
 ```
 
+The script checks whether a team already exists before creating or deleting it.
+
 ---
 
-## 👤 User Commands
+## User Commands
 
 | Command | Description |
 |---|---|
-| `addUser <UserName> <TeamName>` | Creates a user under the given team/group, adds them to the global `ninja` group, and sets up their permissioned home directory. |
-| `delUser <UserName>` | Deletes a user and their home directory (`userdel -r`). |
-| `changePasswd <UserName>` | Sets/updates a user's password (`passwd`). |
-| `changeShell <UserName> <bash\|zsh>` | Changes a user's login shell (`chsh`); rejects unsupported shells. |
-| `ls User` | Lists all system users (`cut -d: -f1 /etc/passwd`). |
+| `addUser <UserName> <TeamName>` | Creates a user and adds the user to the given team |
+| `delUser <UserName>` | Deletes a user and their home directory |
+| `changePasswd <UserName>` | Changes the user's password |
+| `changeShell <UserName> <bash\|zsh>` | Changes the user's login shell |
+| `ls User` | Lists users on the system |
+
+### Examples
 
 ```bash
-./userManager.sh addUser Rakesh abc     # Group 'abc' Not Exist
-./userManager.sh addUser Rakesh amigo   # User 'Rakesh' created successfully
-./userManager.sh addUser Rakesh amigo   # User 'Rakesh' already exists
+./userManager.sh addUser Rakesh abc
+./userManager.sh addUser Rakesh amigo
+./userManager.sh addUser Rakesh amigo
 ```
 
-![addUser validation and home-directory permission checks](screenshots/02-adduser-permissions.png)
+When a user is created, the script:
 
-`addUser` auto-creates the `ninja` group on first use if it doesn't already exist, then:
-1. Creates the user with their primary group set to the given team (`useradd -m -g`)
-2. Adds the user to the `ninja` group (`usermod -aG ninja`)
-3. Creates `~/team` and `~/ninja` inside the user's home directory
-4. Applies the permission model described below
+1. Creates the user with the selected team as the primary group.
+2. Adds the user to the `ninja` group.
+3. Creates `team` and `ninja` directories inside the user's home directory.
+4. Sets the required permissions.
+
+![Add user and permissions](screenshots/02-adduser-permissions.png)
 
 ---
 
-## 🔐 Permission Model
+## Permissions
+
+The script uses the following permissions:
 
 | Path | Permissions | Purpose |
 |---|---|---|
-| `/home/<user>` | `751` (owner: rwx, group: r-x, others: --x) | Owner has full access; teammates can read/traverse; everyone else can only execute (traverse into subpaths they're allowed into). |
-| `/home/<user>/team` | `2770`, owned by `<user>:<team>` | Full read/write/execute for the user and their team group; setgid bit keeps new files owned by the team group. |
-| `/home/<user>/ninja` | `2770`, owned by `<user>:ninja` | Full read/write/execute for the user and anyone in the global `ninja` group; setgid bit for consistent group ownership. |
+| `/home/<user>` | `751` | Owner has full access, team members have read/execute access, others have execute access |
+| `/home/<user>/team` | `2770` | Shared directory for the user's team |
+| `/home/<user>/ninja` | `2770` | Shared directory for users across teams |
+
+The `setgid` permission on the shared directories helps keep the group ownership of new files consistent.
+
+---
+
+## Password and Shell Management
+
+Change a user's password:
 
 ```bash
 ./userManager.sh changePasswd Rakesh
+```
+
+Change the user's shell:
+
+```bash
 ./userManager.sh changeShell Rakesh bash
+```
+
+Check the user's entry:
+
+```bash
 grep "^Rakesh:" /etc/passwd
 ```
 
-![Password change, shell change, and passwd entry verification](screenshots/03-ls-changepasswd-changeshell.png)
+![Password and shell changes](screenshots/03-ls-changepasswd-changeshell.png)
+
+The script also validates the requested shell:
 
 ```bash
-./userManager.sh changeShell Rakesh zsh    # falls back if /bin/zsh isn't installed
-./userManager.sh changeShell Rakesh fish   # Invalid Shell
+./userManager.sh changeShell Rakesh zsh
+./userManager.sh changeShell Rakesh fish
+```
+
+![Shell validation and user deletion](screenshots/04-changeshell-invalid-deluser.png)
+
+---
+
+## Delete User and Team
+
+Delete a user:
+
+```bash
 ./userManager.sh delUser Rakesh
 ```
 
-![Invalid shell handling and delUser](screenshots/04-changeshell-invalid-deluser.png)
+Delete a team:
 
 ```bash
-./userManager.sh delUser Rakesh    # User Does not Exist (already deleted)
-./userManager.sh delTeam amigo     # Group 'amigo' Deleted
-./userManager.sh delTeam amigo     # Group does not Exist
-grep "^ninja:" /etc/group          # global ninja group persists
+./userManager.sh delTeam amigo
 ```
 
-![delUser and delTeam idempotency checks](screenshots/05-deluser-delteam-verify.png)
+The script checks whether the user or team exists before trying to delete it.
+
+![Delete user and team](screenshots/05-deluser-delteam-verify.png)
+
+---
+
+## Check Permissions
+
+The permissions can be checked using:
 
 ```bash
 ls -ld /home/Rakesh/team
 ls -ld /home/Rakesh/ninja
 ls -ld /home/Rakesh
+```
+
+To list teams:
+
+```bash
 ./userManager.sh ls Team
 ```
 
-![Verifying home, team, and ninja directory permissions](screenshots/06-permissions-lsteam.png)
+![Permission checks](screenshots/06-permissions-lsteam.png)
 
 ---
 
-## ✅ Additional Features
+## Additional Features
 
-Beyond the base problem statement, the script also implements:
+Apart from the basic requirements, the script also includes:
 
-- **`changeShell`** — change a user's login shell between `bash` and `zsh`, with validation for unsupported shell names.
-- **`changePasswd`** — set or update a user's password interactively via `passwd`.
-- **`delUser`** — remove a user and their home directory in one step (`userdel -r`).
-- **`delTeam`** — remove a team/group, with existence checks before deleting.
-- **`ls User` / `ls Team`** — list all system users or all groups/teams on demand.
-- **Global `ninja` group** — automatically created on first `addUser` call if missing, giving every user cross-team shared access via `~/ninja`.
-- **Argument & existence validation** — every subcommand checks argument count and verifies the user/group exists (or doesn't) before acting, printing a clear usage/error message otherwise.
-- **Invalid command handling** — unrecognized subcommands fall through to a catch-all case instead of failing silently.
+- `changeShell` to change the user's shell between supported shells.
+- `changePasswd` to change a user's password.
+- `delUser` to remove a user and their home directory.
+- `delTeam` to remove a team.
+- `ls User` and `ls Team` to list users and groups.
+- A global `ninja` group for sharing files between users from different teams.
+- Validation for arguments and existing users/groups.
+- Handling of invalid commands.
 
 ---
 
-## 🧠 Implementation Notes
+## Linux Commands Used
 
-- Built with a single `case "$1" in ... esac` block dispatching on the subcommand name.
-- Uses core Linux user/group utilities: `groupadd`, `groupdel`, `useradd`, `userdel`, `usermod`, `passwd`, `chsh`, `chown`, `chmod`, `grep`, `cut`, `id`.
-- Group/user existence is checked via `grep "^<name>:" /etc/group` / `/etc/passwd` and `id <user>` before create/delete operations, avoiding duplicate or dangling entries.
-- The setgid bit (`2770`) on the `team` and `ninja` directories ensures files created inside inherit the directory's group, keeping shared-access permissions consistent over time.
-- Shell changes are limited to shells present in `/etc/shells` on the target system; `chsh` will warn if the requested shell binary isn't installed.
+- `groupadd`
+- `groupdel`
+- `useradd`
+- `userdel`
+- `usermod`
+- `passwd`
+- `chsh`
+- `chown`
+- `chmod`
+- `grep`
+- `cut`
+- `id`
+
+---
+
+## Concepts Practiced
+
+- Bash scripting
+- Command line arguments
+- Case statements
+- Linux users and groups
+- File and directory permissions
+- `chmod` and `chown`
+- Setgid permissions
+- User and group management
+- Input validation
+- Basic Linux administration
 
 ---
 
 ## Requirements
 
-- Linux with `sudo` privileges (user/group management requires root)
-- Bash shell (tested on Ubuntu via WSL)
+- Linux system
+- Bash
+- `sudo` or root privileges
+- Tested on Ubuntu using WSL
 
 ---
 
 ## Author
 
-**Yogesh Indoria**
+** Yogesh Indoria **
+
