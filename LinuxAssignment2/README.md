@@ -55,7 +55,7 @@ Running an unrecognized command, or `addTeam` with no arguments, shows the expec
 ./userManager.sh addTeam amigo
 ```
 
-![Setup, invalid command handling, and addTeam](screenshots/01-setup-addteam.png)
+![](screenshots/01-setup-addteam.png)
 
 ---
 
