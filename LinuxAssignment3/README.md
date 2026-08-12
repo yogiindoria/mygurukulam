@@ -4,6 +4,7 @@ This assignment is based on Bash scripting. It has two parts: printing
 different star patterns and checking a number for `tom`, `cat`, or
 `tomcat`.
 
+Submitted by: Yogesh Indoria
 ------------------------------------------------------------------------
 
 ## Assignment Overview
