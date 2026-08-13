@@ -1,0 +1,133 @@
+#!/bin/bash
+
+
+# Assignment 5 Part B
+
+
+showUsage(){
+cat <<EOF
+
+
+Usage:
+
+
+    Add a line at top :
+    ./otTextEditor addLineTop <file> <line>
+
+
+    Add a line at bottom :
+    ./otTextEditor addLineBottom <file> <line>
+
+
+    Add a line at specific line number :
+    ./otTextEditor addLineBottom <file> <line>
+
+
+    Replace word :
+    ./otTextEditor updateFirstWord <file> <word> <word2>
+
+
+    Delete word :
+    ./otTextEditor updateAllWords <file> <word> <word2>
+
+
+    Insert word :
+    ./otTextEditor insertWord <file> <word1> <word2> <word to be inserted>
+
+
+    Delete a line :
+    ./otTextEditor deleteLine <file> <line no>
+
+
+    Delete a line containeing a word :
+    ./otTextEditor deleteLine <file> <line no> <word>
+
+
+    Search Word in a file :
+    ./otTextEditor searchWord <file> <word>
+
+
+    Show File :
+    ./otTextEditor showFile <file>
+
+
+    Count number of Lines in File :
+    ./otTextEditor countLines <file>
+
+
+EOF
+}
+
+
+case $1 in
+
+
+    addLineTop)
+    {   echo "$3"
+        cat "$2"
+    } > tmp
+    mv tmp "$2"
+    ;;
+
+
+    addLineBottom)
+    {
+        cat "$2"
+        echo "$3"
+    } > tmp
+    mv tmp "$2"
+    ;;
+
+
+    addLineAt)
+    sed -i "${3}i $4" "$2"
+    ;;
+
+
+    updateFirstWord)
+    sed -i "s/${3}/${4}/" "$2"
+    ;;
+
+
+    updateAllWords)
+    sed -i "s/${3}/${4}/g" "$2"
+    ;;
+
+
+    insertWord)
+    sed -i "s/${3} ${4}/${3} ${5} ${4}/" "$2"
+    ;;
+
+
+    deleteLine)
+    if [ -n "$4" ]; then
+        sed -i "/${4}/d" "$2"
+    else
+        sed -i "${3}d" "$2"
+    fi
+    ;;
+
+
+    searchWord)
+    grep -wn "$3" "$2"
+    ;;
+
+
+    showFile)
+    sed -n 'p' "$2"
+    ;;
+
+
+    countLines)
+    echo "Total lines: $(wc -l < "$2")"
+    ;;
+
+
+    *)
+        showUsage
+    ;;
+
+
+
+
+esac
