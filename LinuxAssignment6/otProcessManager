@@ -1,0 +1,59 @@
+#!/bin/bash
+case $1 in
+topProcess)
+    if [ "$#" -ne 3 ]; then
+        echo "Error: Invalid number of arguments."
+        echo "Usage: ./otProcessManager topProcess <number> <memory/cpu>"
+        exit 1
+    fi
+    number=$2
+    criteria=$3
+    if [ "$criteria" == "memory" ]; then
+        ps -eo pid,comm,%mem --sort=-%mem | head -n $((number + 1))
+    elif [ "$criteria" == "cpu" ]; then
+        ps -eo pid,comm,%cpu --sort=-%cpu | head -n $((number + 1))
+    else
+        echo "Error: Invalid criteria. Use 'memory' or 'cpu'."
+        exit 1
+    fi
+    ;;
+killLeastPriorityProcess)
+    least_priority_process=$(ps -eo pid,comm,pri --sort=pri | head -n 2 | tail -n 1)
+    pid=$(echo $least_priority_process | awk '{print $1}')
+    kill -9 $pid
+    echo "Killed process with PID: $pid"
+    ;;
+
+RunningDurationProcess)
+    ps -eo pid,comm,etime | grep -w "$2"
+    ;;
+listOrphanProcess)
+    ps -eo pid,ppid,comm | grep sleep
+    ;;
+listZombieProcess)
+    ps -eo pid,ppid,stat,comm | awk '$3 ~ /Z/ {print $0}'
+    ;;
+killProcess)    
+    if [ -z "$2" ]; then
+        echo "Error: Please provide a process name or PID."
+        exit 1
+    fi
+    pkill -9 "$2"
+    echo "Killed process: $2"
+    ;;
+ListWaitingProcess) 
+    ps -eo pid,comm,stat | awk '$3 ~ /S/ {print $0}'
+    ;;      
+*)
+    echo "Usage:"
+    echo "./otProcessManager topProcess 5 memory"
+    echo "./otProcessManager topProcess 10 cpu"
+    echo "./otProcessManager killLeastPriorityProcess"
+    echo "./otProcessManager RunningDurationProcess <name/pid>"
+    echo "./otProcessManager listOrphanProcess"
+    echo "./otProcessManager listZoombieProcess"
+    echo "./otProcessManager killProcess <name/pid>"
+    echo "./otProcessManager ListWaitingProcess"
+    ;;
+
+esac
