@@ -1,0 +1,5 @@
+[debian]
+debian-server ansible_host=43.204.142.230 ansible_user=admin
+
+[redhat]
+redhat-server ansible_host=13.235.78.230 ansible_user=ec2-user

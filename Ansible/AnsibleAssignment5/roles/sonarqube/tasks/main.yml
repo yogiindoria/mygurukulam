@@ -1,0 +1,22 @@
+---
+# tasks file for roles/sonarqube
+
+- name: Include Ubuntu tasks
+  ansible.builtin.include_tasks: ubuntu.yml
+  when: ansible_os_family == "Debian"
+
+- name: Include RedHat tasks
+  ansible.builtin.include_tasks: redhat.yml
+  when: ansible_os_family == "RedHat"
+
+- name: Include user and group tasks
+  ansible.builtin.include_tasks: user.yml
+
+- name: Include installation tasks
+  ansible.builtin.include_tasks: install.yml
+
+- name: Include configuration tasks
+  ansible.builtin.include_tasks: configure.yml
+
+- name: Include service tasks
+  ansible.builtin.include_tasks: service.yml

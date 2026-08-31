@@ -1,0 +1,46 @@
+---
+- name: Configure Nginx and Users
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+
+    - name: Install Nginx on Debian
+      apt:
+        name: "{{ nginx_package }}"
+        state: present
+        update_cache: true
+      when: ansible_facts["os_family"] == "Debian"
+
+    - name: Install Nginx on RedHat
+      dnf:
+        name: "{{ nginx_package }}"
+        state: present
+      when: ansible_facts["os_family"] == "RedHat"
+    
+    - name: Deploy Nginx systemd service
+      template:
+        src: nginx.service.j2
+        dest: /etc/systemd/system/nginx.service
+      notify:
+        - Reload systemd
+        - Restart Nginx
+    
+    - name: Include user creation tasks
+      include_tasks: users.yml
+
+    - name: Show secret
+      debug:
+        msg: "Admin password is {{ admin_password }}"
+
+  handlers:
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: true
+
+    - name: Restart Nginx
+      service:
+        name: "{{ nginx_service }}"
+        state: restarted

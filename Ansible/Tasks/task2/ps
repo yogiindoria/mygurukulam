@@ -1,0 +1,5 @@
+Kindly share the Screenshots in the thread
+
+1. Create an ansible role for nginx installation
+2. Also create static and jinja2 template file with a message
+3. Use ansible galaxy commands to init role

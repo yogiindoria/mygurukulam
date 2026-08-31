@@ -1,0 +1,27 @@
+system_manager_packages:
+  - git
+  - curl
+  - vim
+  - htop
+
+system_manager_users:
+  - name: devops
+    groups: sudo
+    shell: /bin/bash
+    state: present
+  - name: deployer
+    groups: sudo
+    shell: /bin/bash
+    state: present
+
+system_manager_git_repos:
+  - repo: "https://github.com/ansible/ansible-examples.git"
+    dest: "/opt/ansible-examples"
+
+system_manager_directories:
+  - path: /opt/apps
+  - path: /opt/scripts
+  - path: /var/log/myapp
+
+system_manager_timezone: "Asia/Kolkata"
+system_manager_motd_message: "Welcome! This server is managed by Ansible."

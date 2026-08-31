@@ -1,0 +1,238 @@
+---
+- name: Setup Spring3Hibernate Application Infrastructure
+  hosts: app
+  become: yes
+
+  tasks:
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install JDK 11
+      ansible.builtin.apt:
+        name: openjdk-11-jdk
+        state: present
+
+    - name: Install Maven
+      ansible.builtin.apt:
+        name: maven
+        state: present
+
+    - name: Install Git
+      ansible.builtin.apt:
+        name: git
+        state: present
+
+    - name: Verify Java installation
+      ansible.builtin.command:
+        cmd: java -version
+      register: java_version
+      changed_when: false
+
+    - name: Display Java version
+      ansible.builtin.debug:
+        var: java_version.stderr
+
+    - name: Verify Maven installation
+      ansible.builtin.command:
+        cmd: mvn -version
+      register: maven_version
+      changed_when: false
+
+    - name: Display Maven version
+      ansible.builtin.debug:
+        var: maven_version.stdout
+
+    - name: Install MySQL Server
+      ansible.builtin.apt:
+        name: mysql-server
+        state: present
+
+    - name: Install Python MySQL dependency
+      ansible.builtin.apt:
+        name: python3-pymysql
+        state: present
+
+    - name: Ensure MySQL service is running
+      ansible.builtin.service:
+        name: mysql
+        state: started
+        enabled: yes
+
+    - name: Create application database
+      ansible.mysql.mysql_db:
+        name: employeedb
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    - name: Clone Spring3Hibernate application
+      ansible.builtin.git:
+        repo: "https://github.com/opstree/spring3hibernate.git"
+        dest: /opt/spring3hibernate
+        version: master
+        force: yes
+
+    - name: Configure Spring3Hibernate database connection
+      ansible.builtin.copy:
+        dest: /opt/spring3hibernate/src/main/resources/database.properties
+        content: |
+          database.driver=com.mysql.jdbc.Driver
+          database.url=jdbc:mysql://localhost:3306/employeedb
+          database.user=root
+          database.password=password
+          hibernate.dialect=org.hibernate.dialect.MySQLDialect
+          hibernate.show_sql=true
+          hibernate.hbm2ddl.auto=update
+          upload.dir=/tmp/uploads
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Create application upload directory
+      ansible.builtin.file:
+        path: /tmp/uploads
+        state: directory
+        mode: '0755'
+
+    - name: Build Spring3Hibernate WAR
+      ansible.builtin.command:
+        cmd: mvn clean package -DskipTests
+        chdir: /opt/spring3hibernate
+      register: maven_build
+      changed_when: true
+
+    - name: Find generated WAR file
+      ansible.builtin.find:
+        paths: /opt/spring3hibernate/target
+        patterns: "*.war"
+        file_type: file
+      register: war_files
+
+    - name: Display generated WAR
+      ansible.builtin.debug:
+        msg: "Generated WAR: {{ war_files.files | map(attribute='path') | list }}"
+
+    - name: Create Tomcat installation directory
+      ansible.builtin.file:
+        path: /opt/tomcat
+        state: directory
+        mode: '0755'
+
+    - name: Download Tomcat 7.0.108
+      ansible.builtin.get_url:
+        url: https://archive.apache.org/dist/tomcat/tomcat-7/v7.0.108/bin/apache-tomcat-7.0.108.tar.gz
+        dest: /tmp/apache-tomcat-7.0.108.tar.gz
+        mode: '0644'
+
+    - name: Extract Tomcat 7.0.108
+      ansible.builtin.unarchive:
+        src: /tmp/apache-tomcat-7.0.108.tar.gz
+        dest: /opt/tomcat
+        remote_src: yes
+        creates: /opt/tomcat/apache-tomcat-7.0.108
+
+    - name: Create Tomcat user
+      ansible.builtin.user:
+        name: tomcat
+        system: yes
+        shell: /bin/false
+        home: /opt/tomcat
+
+    - name: Set Tomcat ownership
+      ansible.builtin.file:
+        path: /opt/tomcat/apache-tomcat-7.0.108
+        owner: tomcat
+        group: tomcat
+        recurse: yes
+
+    - name: Make Tomcat scripts executable
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: '0755'
+      loop:
+        - /opt/tomcat/apache-tomcat-7.0.108/bin/startup.sh
+        - /opt/tomcat/apache-tomcat-7.0.108/bin/shutdown.sh
+
+    - name: Create Tomcat systemd service
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/tomcat.service
+        mode: '0644'
+        content: |
+          [Unit]
+          Description=Apache Tomcat 7.0.108
+          After=network.target
+
+          [Service]
+          Type=forking
+          User=tomcat
+          Group=tomcat
+
+          Environment="JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64"
+          Environment="CATALINA_HOME=/opt/tomcat/apache-tomcat-7.0.108"
+          Environment="CATALINA_BASE=/opt/tomcat/apache-tomcat-7.0.108"
+          Environment="CATALINA_PID=/opt/tomcat/apache-tomcat-7.0.108/temp/tomcat.pid"
+
+          ExecStart=/opt/tomcat/apache-tomcat-7.0.108/bin/startup.sh
+          ExecStop=/opt/tomcat/apache-tomcat-7.0.108/bin/shutdown.sh
+
+          Restart=on-failure
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: Start and enable Tomcat
+      ansible.builtin.systemd:
+        name: tomcat
+        state: started
+        enabled: yes
+
+    - name: Deploy Spring3Hibernate WAR to Tomcat
+      ansible.builtin.copy:
+        src: /opt/spring3hibernate/target/Spring3HibernateApp.war
+        dest: /opt/tomcat/apache-tomcat-7.0.108/webapps/Spring3HibernateApp.war
+        remote_src: yes
+        owner: tomcat
+        group: tomcat
+        mode: '0644'
+
+    - name: Restart Tomcat after WAR deployment
+      ansible.builtin.systemd:
+        name: tomcat
+        state: restarted
+
+    - name: Wait for Tomcat to start
+      ansible.builtin.wait_for:
+        host: 127.0.0.1
+        port: 8080
+        delay: 5
+        timeout: 60
+
+    - name: Verify deployed WAR
+      ansible.builtin.stat:
+        path: /opt/tomcat/apache-tomcat-7.0.108/webapps/Spring3HibernateApp.war
+      register: deployed_war
+
+    - name: Display deployment status
+      ansible.builtin.debug:
+        msg: "WAR deployed successfully: {{ deployed_war.stat.exists }}"
+
+    - name: Check Spring3Hibernate application
+      ansible.builtin.uri:
+        url: http://127.0.0.1:8080/Spring3HibernateApp/
+        method: GET
+        status_code:
+          - 200
+          - 302
+        return_content: no
+      register: application_response
+      changed_when: false
+
+    - name: Display application status
+      ansible.builtin.debug:
+        msg: "Spring3Hibernate application is running. HTTP status: {{ application_response.status }}"

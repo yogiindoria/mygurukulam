@@ -1,0 +1,21 @@
+---
+# SonarQube service tasks
+
+- name: Create SonarQube systemd service
+  become: true
+  ansible.builtin.template:
+    src: sonarqube.service.j2
+    dest: "{{ sonarqube_service_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart SonarQube
+
+- name: Enable and start SonarQube
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ sonarqube_service_name }}"
+    enabled: true
+    state: started

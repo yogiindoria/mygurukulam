@@ -1,0 +1,8 @@
+---
+
+- name: clone repository
+  git:
+   repo: "{{ item.repo }}"
+   dest: "{{ item.dest }}"
+   force: yes
+  loop: "{{ system_manager_git_repos }}"

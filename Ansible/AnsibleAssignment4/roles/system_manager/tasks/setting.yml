@@ -1,0 +1,13 @@
+---
+
+- name: Set TimeZone
+  timezone: 
+    name: "{{ system_manager_timezone }}"
+  notify: timezone changed
+
+- name: Wlcm Msg
+  copy:
+    dest: /etc/motd
+    content: "{{ system_manager_motd_message }}"
+  notify: MOTD Msg Changed
+

@@ -1,0 +1,11 @@
+---
+
+- name: update apt cache
+  apt: 
+    update_cache: yes
+
+- name: install Package
+  apt:
+   name: "{{ system_manager_packages }}"
+   state: present
+   

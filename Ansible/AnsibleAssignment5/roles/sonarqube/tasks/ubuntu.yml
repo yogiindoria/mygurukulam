@@ -1,0 +1,13 @@
+---
+- name: Install Java on Ubuntu
+  become: true
+  ansible.builtin.apt:
+    name: "{{ sonarqube_java_package_debian }}"
+    state: present
+    update_cache: true
+
+- name: Install unzip on Ubuntu
+  become: true
+  ansible.builtin.apt:
+    name: unzip
+    state: present

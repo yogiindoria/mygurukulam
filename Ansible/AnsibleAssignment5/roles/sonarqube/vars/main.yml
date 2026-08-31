@@ -1,0 +1,14 @@
+---
+# vars file for roles/sonarqube
+
+sonarqube_download_url: "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-{{ sonarqube_version }}.zip"
+
+sonarqube_zip_file: "{{ sonarqube_download_dir }}/sonarqube-{{ sonarqube_version }}.zip"
+
+sonarqube_service_name: "sonarqube"
+
+sonarqube_service_file: "/etc/systemd/system/sonarqube.service"
+
+sonarqube_config_file: "{{ sonarqube_install_dir }}/conf/sonar.properties"
+
+sonarqube_extracted_dir: "/opt/sonarqube-{{ sonarqube_version }}"

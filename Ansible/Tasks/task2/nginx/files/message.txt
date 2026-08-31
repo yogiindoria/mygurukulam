@@ -1,0 +1,2 @@
+Hello from Ansible Role!
+This is a static message.

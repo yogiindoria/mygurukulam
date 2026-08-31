@@ -1,0 +1,7 @@
+- name: Configure system using system_manager role
+  hosts: servers
+  become: true         
+  gather_facts: true
+
+  roles:
+    - system_manager

@@ -1,0 +1,9 @@
+---
+
+- name: create User
+  user:
+   name: "{{ item.name }}"
+   groups: "{{ item.groups }}"
+   shell: "{{ item.shell }}"
+   state: "{{ item.state }}"
+  loop: "{{ system_manager_users }}"

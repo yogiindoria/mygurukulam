@@ -1,0 +1,8 @@
+--- 
+
+- import_tasks: package.yml
+- import_tasks: user.yml
+- import_tasks: git.yml
+- import_tasks: dir.yml
+- import_tasks: setting.yml
+

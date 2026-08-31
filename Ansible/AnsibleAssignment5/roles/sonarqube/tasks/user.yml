@@ -1,0 +1,16 @@
+---
+- name: Create SonarQube group
+  become: true
+  ansible.builtin.group:
+    name: "{{ sonarqube_group }}"
+    state: present
+
+- name: Create SonarQube user
+  become: true
+  ansible.builtin.user:
+    name: "{{ sonarqube_user }}"
+    group: "{{ sonarqube_group }}"
+    system: true
+    shell: /bin/bash
+    create_home: false
+    state: present

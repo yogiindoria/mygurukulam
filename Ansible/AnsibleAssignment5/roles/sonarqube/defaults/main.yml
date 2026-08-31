@@ -1,0 +1,16 @@
+---
+# defaults file for roles/sonarqube
+
+sonarqube_version: "26.8.0.126808"
+sonarqube_web_host: "0.0.0.0"
+sonarqube_web_port: 9000
+
+sonarqube_user: "sonarqube"
+sonarqube_group: "sonarqube"
+
+sonarqube_install_dir: "/opt/sonarqube"
+
+sonarqube_java_package_debian: "openjdk-21-jdk"
+sonarqube_java_package_redhat: "java-21-openjdk"
+
+sonarqube_download_dir: "/tmp"

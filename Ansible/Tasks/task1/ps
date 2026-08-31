@@ -1,0 +1,8 @@
+Ansible Task 1
+
+1. Create a Playbook to install nginx for both redhat and debian
+2. Playbook is able to create multiple user by one task
+3. Playbook is able to import the other yaml files (example: user creation)
+4. Create jinja2 template service file for nginx 
+5. Playbook is able to user both host and group variables
+6. Also Pass the secrets and passwords for the playbook

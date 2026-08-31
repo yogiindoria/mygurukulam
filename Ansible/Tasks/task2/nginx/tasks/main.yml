@@ -1,0 +1,18 @@
+---
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: true
+
+- name: Copy static message
+  copy:
+    src: message.txt
+    dest: /var/www/html/static-message.txt
+    mode: '0644'
+
+- name: Deploy Jinja2 message
+  template:
+    src: message.j2
+    dest: /var/www/html/dynamic-message.html
+    mode: '0644'

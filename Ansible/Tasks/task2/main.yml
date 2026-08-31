@@ -1,0 +1,54 @@
+---
+- name: Configure Ubuntu Nginx
+  hosts: ubuntu
+  become: true
+
+  roles:
+    - nginx
+
+  tasks:
+
+    - name: Verify Nginx is installed
+      command: nginx -v
+      register: nginx_version
+      changed_when: false
+
+    - name: Show Nginx version
+      debug:
+        msg: "{{ nginx_version.stderr }}"
+
+    - name: Check static message file
+      stat:
+        path: /var/www/html/static-message.txt
+      register: static_file
+
+    - name: Verify static file exists
+      assert:
+        that:
+          - static_file.stat.exists
+        success_msg: "Static message file exists"
+        fail_msg: "Static message file does not exist"
+
+    - name: Check Jinja2 generated file
+      stat:
+        path: /var/www/html/dynamic-message.html
+      register: jinja_file
+
+    - name: Verify Jinja2 file exists
+      assert:
+        that:
+          - jinja_file.stat.exists
+        success_msg: "Jinja2 template generated successfully"
+        fail_msg: "Jinja2 template file does not exist"
+
+    - name: Check Nginx service
+      command: systemctl is-active nginx
+      register: nginx_status
+      changed_when: false
+
+    - name: Verify Nginx is running
+      assert:
+        that:
+          - nginx_status.stdout == "active"
+        success_msg: "Nginx service is running"
+        fail_msg: "Nginx service is not running"

@@ -1,0 +1,29 @@
+---
+- name: Configure vm.max_map_count
+  become: true
+  ansible.posix.sysctl:
+    name: vm.max_map_count
+    value: "524288"
+    state: present
+    reload: true
+
+- name: Configure SonarQube limits
+  become: true
+  ansible.builtin.pam_limits:
+    domain: "{{ sonarqube_user }}"
+    limit_type: "-"
+    limit_item: "{{ item.item }}"
+    value: "{{ item.value }}"
+  loop:
+    - { item: "nofile", value: "131072" }
+    - { item: "nproc", value: "8192" }
+
+- name: Configure SonarQube
+  become: true
+  ansible.builtin.template:
+    src: sonar.properties.j2
+    dest: "{{ sonarqube_config_file }}"
+    owner: "{{ sonarqube_user }}"
+    group: "{{ sonarqube_group }}"
+    mode: "0644"
+  notify: Restart SonarQube

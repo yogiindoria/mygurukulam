@@ -1,0 +1,12 @@
+---
+- name: Install Java on Redhat
+  become: true
+  ansible.builtin.dnf:
+    name: "{{ sonarqube_java_package_redhat }}"
+    state: present
+
+- name: Install unzip on RedHat
+  become: true
+  ansible.builtin.dnf:
+    name: unzip
+    state: present

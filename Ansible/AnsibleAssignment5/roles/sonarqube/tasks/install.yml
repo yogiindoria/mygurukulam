@@ -1,0 +1,38 @@
+---
+- name: Create SonarQube installation directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ sonarqube_install_dir }}"
+    state: directory
+    owner: "{{ sonarqube_user }}"
+    group: "{{ sonarqube_group }}"
+    mode: "0755"
+
+- name: Download SonarQube
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ sonarqube_download_url }}"
+    dest: "{{ sonarqube_zip_file }}"
+    mode: "0644"
+
+- name: Extract SonarQube
+  become: true
+  ansible.builtin.unarchive:
+    src: "{{ sonarqube_zip_file }}"
+    dest: "/opt"
+    remote_src: true
+
+- name: Set SonarQube ownership
+  become: true
+  ansible.builtin.file:
+    path: "/opt/sonarqube-{{ sonarqube_version }}"
+    owner: "{{ sonarqube_user }}"
+    group: "{{ sonarqube_group }}"
+    recurse: true
+
+- name: Create SonarQube symlink
+  become: true
+  ansible.builtin.file:
+    src: "/opt/sonarqube-{{ sonarqube_version }}"
+    dest: "{{ sonarqube_install_dir }}"
+    state: link

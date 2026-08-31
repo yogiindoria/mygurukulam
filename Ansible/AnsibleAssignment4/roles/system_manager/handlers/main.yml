@@ -1,0 +1,8 @@
+---
+- name: timezone changed
+  debug:
+    msg: "Time Zone Updated Successfully"
+
+- name: MOTD Msg Changed
+  debug:
+    msg: "Message Changed Successfully"
