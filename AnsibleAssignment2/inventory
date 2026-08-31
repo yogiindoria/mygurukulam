@@ -1,4 +1,0 @@
-[servers]
-VM2 ansible_host=13.200.246.139 ansible_user=ubuntu
-VM3 ansible_host=43.204.145.169 ansible_user=ubuntu
-
