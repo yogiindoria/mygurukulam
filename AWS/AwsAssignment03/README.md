@@ -4,7 +4,7 @@
 
 ---
 
-## 📌 Project Overview
+## Project Overview
 
 This assignment focuses on designing and implementing a highly
 available, scalable, secure, and version-controlled Nginx-based
@@ -22,7 +22,7 @@ deployment automation.
 
 ---
 
-## 🎯 Overall Objective
+## Overall Objective
 
 The main objective of this assignment is to design and implement
 a production-oriented AWS infrastructure for an Nginx middleware
@@ -47,7 +47,7 @@ layer that can:
 
 ---
 
-## 🏗️ High-Level Architecture
+## High-Level Architecture
 
 ```text
                          Internet
@@ -615,7 +615,7 @@ Private EC2
 
 # Phase 3 — ASG Self-Healing
 
-## 📌 Objective
+##  Objective
 
 The objective of this phase is to verify the self-healing capability of the AWS Auto Scaling Group.
 
@@ -872,7 +872,7 @@ The complete self-healing flow:
 
 ---
 
-## ✅ Phase 3 Result
+##  Phase 3 Result
 
 The ASG self-healing mechanism was successfully tested.
 
@@ -894,7 +894,7 @@ This demonstrates **automatic failure detection and self-healing using AWS Auto 
 
 # Phase 4 — Path-Based Routing, Private EC2 & S3 Integration
 
-## 📌 Objective
+##  Objective
 
 Implement path-based routing using one Application Load Balancer with two Target Groups and two private Nginx application servers.
 
@@ -1257,7 +1257,7 @@ Private App SG
 
 ---
 
-## ✅ Phase 4 Result
+## Phase 4 Result
 
 Phase 4 was successfully completed.
 
@@ -1288,7 +1288,7 @@ Final routing:
 ---
 # Phase 5 — S3 Security, IAM User & Access Control
 
-## 📌 Objective
+##  Objective
 
 The objective of this phase is to implement secure Amazon S3 storage with IAM-based access control.
 
@@ -1747,7 +1747,7 @@ Permissions are provided through IAM identity-based policies.
 
 ---
 
-# ✅ Phase 5 Result
+#  Phase 5 Result
 
 Phase 5 was successfully completed.
 
