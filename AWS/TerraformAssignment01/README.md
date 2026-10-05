@@ -46,8 +46,6 @@ The project follows these goals:
 
 ## 2. Architecture
 
-![Architecture Diagram](screenshots/01-architecture-diagram.png)
-
 ```
 Internet
    │

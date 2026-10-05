@@ -1,0 +1,4 @@
+aws_region = "ap-south-1"
+ami_id = "ami-REPLACE_ME"
+key_name = "REPLACE_ME"
+db_password = "REPLACE_ME"

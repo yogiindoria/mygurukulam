@@ -1,0 +1,10 @@
+variable "vpc_id" { type = string }
+variable "availability_zone_a" { type = string }
+variable "availability_zone_b" { type = string }
+variable "public_subnet_a_cidr" { type = string }
+variable "public_subnet_b_cidr" { type = string }
+variable "private_app_a_cidr" { type = string }
+variable "private_app_b_cidr" { type = string }
+variable "private_db_a_cidr" { type = string }
+variable "private_db_b_cidr" { type = string }
+variable "name_prefix" { type = string }
