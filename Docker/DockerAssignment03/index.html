@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Docker OS Information</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      margin: 0;
+      padding: 30px;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h1 { color: #0b73c9; }
+
+    .banner {
+      background: #0b73c9;
+      color: white;
+      padding: 22px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #dbeafe;
+      box-shadow: 0 2px 6px #0000000a;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .value {
+      font-size: 18px;
+      font-weight: bold;
+      overflow-wrap: anywhere;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🐳 Docker OS Information</h1>
+
+    <div class="banner">
+      <h2>Hello from {{HOSTNAME}}</h2>
+      <p>Running inside a Docker container</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Hostname</h3>
+        <div class="value">{{HOSTNAME}}</div>
+      </div>
+
+      <div class="card">
+        <h3>Operating System</h3>
+        <div class="value">{{OS_TYPE}}</div>
+      </div>
+
+      <div class="card">
+        <h3>Platform</h3>
+        <div class="value">{{OS_PLATFORM}}</div>
+      </div>
+
+      <div class="card">
+        <h3>Architecture</h3>
+        <div class="value">{{OS_ARCH}}</div>
+      </div>
+
+      <div class="card">
+        <h3>OS Release</h3>
+        <div class="value">{{OS_RELEASE}}</div>
+      </div>
+
+      <div class="card">
+        <h3>CPU Cores</h3>
+        <div class="value">{{CPU_COUNT}}</div>
+      </div>
+
+      <div class="card">
+        <h3>Total Memory (MB)</h3>
+        <div class="value">{{TOTAL_MEMORY}}</div>
+      </div>
+
+      <div class="card">
+        <h3>Free Memory (MB)</h3>
+        <div class="value">{{FREE_MEMORY}}</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

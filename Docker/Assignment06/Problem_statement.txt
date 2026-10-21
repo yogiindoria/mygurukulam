@@ -1,0 +1,6 @@
+ASSIGNMENT 6.
+******************ASSIGNMENT **************************
+In this assignment we will try to understand what Deployments and RelicaSets are in
+K8s.
+This time try to deploy OT-Microservice Application using Deployments and
+ReplicaSets.

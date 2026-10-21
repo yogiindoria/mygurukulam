@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: employee-config
+data:
+  config-template.yaml: |
+    elasticsearch:
+      enabled: true
+      host: http://elasticsearch:9200
+      username: elastic
+      password: "${ELASTIC_PASSWORD}"
+    employee:
+      api_port: "8083"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employee
+  template:
+    metadata:
+      labels:
+        app: employee
+    spec:
+      initContainers:
+        - name: create-config
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              sed "s/\${ELASTIC_PASSWORD}/$(cat /secret/elastic-password)/g" \
+                /template/config-template.yaml > /generated/config.yaml
+          volumeMounts:
+            - name: config-template
+              mountPath: /template
+            - name: elastic-secret
+              mountPath: /secret
+              readOnly: true
+            - name: generated-config
+              mountPath: /generated
+      containers:
+        - name: employee
+          image: yogeshindoria/ot-empms-employee:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8083
+          env:
+            - name: CONFIG_FILE
+              value: /root/config/config.yaml
+          volumeMounts:
+            - name: generated-config
+              mountPath: /root/config
+              readOnly: true
+      volumes:
+        - name: config-template
+          configMap:
+            name: employee-config
+        - name: elastic-secret
+          secret:
+            secretName: elasticsearch-secret
+            items:
+              - key: elastic-password
+                path: elastic-password
+        - name: generated-config
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: employee
+spec:
+  selector:
+    app: employee
+  ports:
+    - port: 8083
+      targetPort: 8083
+  type: ClusterIP

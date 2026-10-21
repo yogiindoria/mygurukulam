@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yogesh Indoria | Aspiring DevOps Engineer</title>
+  <meta name="description" content="Yogesh Indoria - Aspiring DevOps Engineer focused on AWS, Linux, Docker, Jenkins, Ansible, Terraform and Kubernetes.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐳</text></svg>">
+  <style>
+    :root {
+      --bg: #f5f8fb;
+      --card: #ffffff;
+      --text: #14212e;
+      --muted: #52606d;
+      --border: #dde6ee;
+      --accent: #0b73c9;
+      --accent-dark: #075a9e;
+      --cyan: #0891b2;
+      --tint: #e8f3fc;
+      --radius: 14px;
+      --shadow: 0 1px 3px rgba(20, 33, 46, 0.06);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    h1, h2, h3, p, ul { margin: 0; }
+    ul { padding: 0; list-style: none; }
+    a { color: inherit; }
+
+    :focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; border-radius: 6px; }
+
+    .container { width: min(1080px, 100% - 40px); margin-inline: auto; }
+    .section { padding: 64px 0; }
+    .section-title { font-size: 1.75rem; line-height: 1.25; letter-spacing: -0.01em; margin-bottom: 8px; }
+    .section-lead { color: var(--muted); margin-bottom: 28px; max-width: 62ch; }
+
+    /* ---------- Navigation ---------- */
+    .site-header {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .nav-brand { font-weight: 700; text-decoration: none; letter-spacing: -0.01em; }
+    .nav-links { display: flex; gap: 6px; }
+    .nav-links a {
+      text-decoration: none; color: var(--muted); font-size: 0.95rem;
+      padding: 8px 12px; border-radius: 8px;
+    }
+    .nav-links a:hover { background: var(--tint); color: var(--accent-dark); }
+    .nav-toggle {
+      display: none; background: none; border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 12px; font: inherit; color: var(--text); cursor: pointer;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero { padding: 80px 0 56px; }
+    .badge {
+      display: inline-block; background: var(--tint); color: var(--accent-dark);
+      border: 1px solid #c6e0f5; padding: 6px 14px; border-radius: 999px;
+      font-size: 0.9rem; font-weight: 600; margin-bottom: 22px;
+    }
+    .hero h1 { font-size: clamp(2.4rem, 6vw, 3.8rem); line-height: 1.1; letter-spacing: -0.03em; }
+    .hero-title { font-size: clamp(1.2rem, 2.6vw, 1.6rem); color: var(--accent); font-weight: 600; margin: 10px 0 18px; }
+    .hero-intro { color: var(--muted); font-size: 1.1rem; max-width: 60ch; }
+    .hero-stack { margin-top: 18px; color: var(--text); font-weight: 500; font-size: 0.98rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+
+    .btn {
+      display: inline-block; text-decoration: none; font-weight: 600;
+      padding: 12px 24px; border-radius: 10px; border: 1px solid var(--accent);
+      transition: background-color 0.15s ease;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-dark); }
+    .btn-secondary { background: var(--card); color: var(--accent-dark); }
+    .btn-secondary:hover { background: var(--tint); }
+
+    /* ---------- Cards ---------- */
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px;
+    }
+
+    .about-card { max-width: 780px; }
+    .about-card p + p { margin-top: 14px; }
+
+    .skills-grid {
+      display: grid; gap: 16px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .skill-icon { font-size: 1.6rem; line-height: 1; display: block; margin-bottom: 12px; }
+    .skill-card h3 { font-size: 1.1rem; margin-bottom: 4px; }
+    .skill-card p { color: var(--muted); font-size: 0.95rem; }
+    .skill-card--docker { border-color: #9ccbee; background: linear-gradient(180deg, #f3f9fe, #fff); }
+
+    /* ---------- Additional technologies ---------- */
+    .chip-list { display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip {
+      background: var(--card); border: 1px solid var(--border); color: var(--text);
+      padding: 7px 16px; border-radius: 999px; font-size: 0.95rem;
+    }
+    .chip--accent { background: var(--tint); border-color: #c6e0f5; color: var(--accent-dark); font-weight: 600; }
+    .section--compact { padding: 40px 0; }
+    .section--compact .section-title { font-size: 1.3rem; }
+
+    /* ---------- Docker ---------- */
+    .docker-panel {
+      background: var(--card); border: 1px solid #b9d9f0; border-left: 5px solid var(--cyan);
+      border-radius: var(--radius); box-shadow: var(--shadow); padding: 30px;
+    }
+    .docker-panel .section-lead { margin-bottom: 22px; }
+
+    /* ---------- Roadmap ---------- */
+    .roadmap { display: flex; align-items: stretch; gap: 0; }
+    .roadmap li {
+      flex: 1; position: relative; text-align: center;
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px 6px; font-weight: 600; font-size: 0.95rem;
+      margin-right: 22px;
+    }
+    .roadmap li:last-child { margin-right: 0; }
+    .roadmap li:not(:last-child)::after {
+      content: "→"; position: absolute; right: -20px; top: 50%;
+      transform: translateY(-50%); color: var(--accent); font-weight: 700;
+    }
+    .roadmap li.is-current { background: var(--tint); border-color: var(--accent); color: var(--accent-dark); }
+
+    /* ---------- Current focus ---------- */
+    .focus-card {
+      background: linear-gradient(135deg, #0b73c9, #0891b2);
+      color: #fff; border-radius: var(--radius); padding: 34px;
+    }
+    .focus-card h2 { font-size: 1.6rem; margin-bottom: 8px; }
+    .focus-card p { opacity: 0.95; margin-bottom: 20px; }
+    .focus-card .chip {
+      background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.5); color: #fff;
+    }
+
+    /* ---------- Footer ---------- */
+    .site-footer { background: var(--card); border-top: 1px solid var(--border); padding: 48px 0 32px; }
+    .footer-name { font-size: 1.3rem; font-weight: 700; }
+    .footer-role { color: var(--muted); margin-bottom: 20px; }
+    .contact-links { display: flex; flex-wrap: wrap; gap: 12px; }
+    .contact-links a {
+      text-decoration: none; padding: 9px 18px; border: 1px solid var(--border);
+      border-radius: 10px; font-weight: 500;
+    }
+    .contact-links a:hover { background: var(--tint); border-color: var(--accent); color: var(--accent-dark); }
+    .footer-note { margin-top: 28px; color: var(--muted); font-size: 0.88rem; }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 900px) {
+      .skills-grid { grid-template-columns: repeat(2, 1fr); }
+      .roadmap { flex-wrap: wrap; row-gap: 22px; }
+      .roadmap li { flex: 1 1 calc(25% - 22px); min-width: 110px; }
+      .roadmap li:nth-child(4)::after { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .section { padding: 48px 0; }
+      .hero { padding: 48px 0 40px; }
+
+      .nav-toggle { display: block; }
+      .nav-links {
+        display: none; position: absolute; top: 64px; left: 0; right: 0;
+        flex-direction: column; background: #fff; padding: 10px 20px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-links.is-open { display: flex; }
+
+      .skills-grid { grid-template-columns: 1fr; }
+      .docker-panel, .focus-card { padding: 24px 20px; }
+
+      .roadmap { flex-direction: column; row-gap: 26px; }
+      .roadmap li { flex: none; margin-right: 0; }
+      .roadmap li:not(:last-child)::after {
+        content: "↓"; right: auto; left: 50%; top: auto; bottom: -24px;
+        transform: translateX(-50%);
+      }
+      .roadmap li:nth-child(4)::after { display: block; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="nav-brand" href="#top">Yogesh Indoria</a>
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">Menu</button>
+      <nav aria-label="Main navigation">
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#docker">Docker</a></li>
+          <li><a href="#journey">Journey</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="container">
+        <span class="badge">🐳 Docker Assignment Profile</span>
+        <h1 id="hero-heading">Yogesh Indoria</h1>
+        <p class="hero-title">Aspiring DevOps Engineer</p>
+        <p class="hero-intro">Passionate about DevOps, cloud infrastructure, automation, CI/CD, and containerization. Building practical hands-on experience with modern DevOps tools and technologies.</p>
+        <p class="hero-stack">AWS • Linux • Git • Jenkins • Ansible • Docker • CI/CD • Terraform • Kubernetes</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#skills">View Skills</a>
+          <a class="btn btn-secondary" href="#contact">Contact / Connect</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section" id="about" aria-labelledby="about-heading">
+      <div class="container">
+        <h2 class="section-title" id="about-heading">About Me</h2>
+        <div class="card about-card">
+          <p>I am Yogesh Indoria, an aspiring DevOps Engineer focused on building practical skills in cloud infrastructure, automation, CI/CD, containers, and Infrastructure as Code.</p>
+          <p>I enjoy working with AWS, Linux, Docker, Jenkins, Ansible, Terraform, and Kubernetes while continuously improving my understanding of modern DevOps practices.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DevOps skills -->
+    <section class="section" id="skills" aria-labelledby="skills-heading">
+      <div class="container">
+        <h2 class="section-title" id="skills-heading">DevOps Skills</h2>
+        <p class="section-lead">The core tools and practices I am building my career around.</p>
+        <ul class="skills-grid">
+          <li class="card skill-card"><span class="skill-icon" aria-hidden="true">☁️</span><h3>AWS</h3><p>Cloud infrastructure and services</p></li>
+          <li class="card skill-card"><span class="skill-icon" aria-hidden="true">🐧</span><h3>Linux</h3><p>Linux administration and command-line operations</p></li>
+          <li class="card skill-card"><span class="skill-icon" aria-hidden="true">🔀</span><h3>Git</h3><p>Version control and collaboration</p></li>
+          <li class="card skill-card"><span class="skill-icon" aria-hidden="true">🔨</span><h3>Jenkins</h3><p>CI/CD automation</p></li>
+          <li class="card skill-card"><span class="skill-icon" aria-hidden="true">⚙️</span><h3>Ansible</h3><p>Configuration management and automation</p></li>
+          <li class="card skill-card skill-card--docker"><span class="skill-icon" aria-hidden="true">🐳</span><h3>Docker</h3><p>Containerization and container management</p></li>
+          <li class="card skill-card"><span class="skill-icon" aria-hidden="true">🔄</span><h3>CI/CD</h3><p>Continuous integration and deployment</p></li>
+          <li class="card skill-card"><span class="skill-icon" aria-hidden="true">🏗️</span><h3>Terraform</h3><p>Infrastructure as Code</p></li>
+          <li class="card skill-card"><span class="skill-icon" aria-hidden="true">☸️</span><h3>Kubernetes</h3><p>Container orchestration</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Additional technologies -->
+    <section class="section section--compact" aria-labelledby="extra-heading">
+      <div class="container">
+        <h2 class="section-title" id="extra-heading">Additional Technologies</h2>
+        <ul class="chip-list">
+          <li class="chip">PHP</li>
+          <li class="chip">Software Analysis</li>
+          <li class="chip">Appium</li>
+          <li class="chip">Postman</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Docker -->
+    <section class="section" id="docker" aria-labelledby="docker-heading">
+      <div class="container">
+        <div class="docker-panel">
+          <h2 class="section-title" id="docker-heading">🐳 Docker &amp; Containerization</h2>
+          <p class="section-lead">Hands-on learning with Docker containers, images, volumes, networking, port mapping, resource limits, Dockerfiles, and containerized applications.</p>
+          <ul class="chip-list">
+            <li class="chip chip--accent">Containers</li>
+            <li class="chip chip--accent">Images</li>
+            <li class="chip chip--accent">Dockerfile</li>
+            <li class="chip chip--accent">Port Mapping</li>
+            <li class="chip chip--accent">Volumes</li>
+            <li class="chip chip--accent">Networks</li>
+            <li class="chip chip--accent">Resource Limits</li>
+            <li class="chip chip--accent">Nginx</li>
+            <li class="chip chip--accent">Docker CLI</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Learning journey -->
+    <section class="section" id="journey" aria-labelledby="journey-heading">
+      <div class="container">
+        <h2 class="section-title" id="journey-heading">DevOps Learning Journey</h2>
+        <p class="section-lead">My roadmap, one tool at a time.</p>
+        <ol class="roadmap">
+          <li>Linux</li>
+          <li>Git</li>
+          <li class="is-current">Docker</li>
+          <li>Jenkins</li>
+          <li>Ansible</li>
+          <li>AWS</li>
+          <li>Terraform</li>
+          <li>Kubernetes</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Current focus -->
+    <section class="section" aria-labelledby="focus-heading">
+      <div class="container">
+        <div class="focus-card">
+          <h2 id="focus-heading">🚀 Currently Focused On</h2>
+          <p>Actively building hands-on DevOps skills every day.</p>
+          <ul class="chip-list">
+            <li class="chip">Docker</li>
+            <li class="chip">AWS</li>
+            <li class="chip">Terraform</li>
+            <li class="chip">Kubernetes</li>
+            <li class="chip">Jenkins</li>
+            <li class="chip">CI/CD</li>
+            <li class="chip">DevOps Automation</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <div class="container">
+      <p class="footer-name">Yogesh Indoria</p>
+      <p class="footer-role">Aspiring DevOps Engineer</p>
+      <ul class="contact-links">
+        <!-- Replace each "#" below with your real profile URL / email -->
+        <li><a href="#" aria-label="GitHub profile (placeholder)">GitHub</a></li>
+        <li><a href="#" aria-label="LinkedIn profile (placeholder)">LinkedIn</a></li>
+        <li><a href="#" aria-label="Email (placeholder)">Email</a></li>
+      </ul>
+      <p class="footer-note">Served from an Nginx Docker container.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    (function () {
+      var toggle = document.getElementById('navToggle');
+      var links = document.getElementById('navLinks');
+      if (!toggle || !links) return;
+
+      toggle.addEventListener('click', function () {
+        var open = links.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+
+      links.addEventListener('click', function (e) {
+        if (e.target.tagName === 'A') {
+          links.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

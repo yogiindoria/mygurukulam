@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pirates Team | Docker</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            width: 90%;
+            max-width: 650px;
+            padding: 45px;
+            text-align: center;
+
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+        }
+
+        .logo {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 38px;
+            margin-bottom: 8px;
+        }
+
+        .team {
+            color: #94a3b8;
+            font-size: 17px;
+            margin-bottom: 35px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 50px;
+            background: rgba(34, 197, 94, 0.15);
+            color: #86efac;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .message-box {
+            padding: 30px 20px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .period {
+            color: #94a3b8;
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        .message {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #cbd5e1;
+            font-size: 16px;
+        }
+
+        footer {
+            margin-top: 30px;
+            color: #64748b;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+
+        <div class="logo">🐳</div>
+
+        <h1>Docker Static Website</h1>
+
+        <div class="team">
+            Pirates Team • yogesh.pirates.com
+        </div>
+
+        <div class="status">
+            ● Docker Container Running
+        </div>
+
+        <div class="message-box">
+
+            <div class="period" id="period">
+                Loading...
+            </div>
+
+            <div class="message" id="message">
+                Loading...
+            </div>
+
+            <div class="description" id="description">
+                Loading...
+            </div>
+
+        </div>
+
+        <footer>
+            Docker Assignment #1 • Built by Yogesh
+        </footer>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script>
+        document.getElementById("period").textContent = SITE_CONFIG.period;
+        document.getElementById("message").textContent = SITE_CONFIG.message;
+        document.getElementById("description").textContent = SITE_CONFIG.description;
+    </script>
+
+</body>
+</html>

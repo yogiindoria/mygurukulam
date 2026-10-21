@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: attendance-config-template
+data:
+  config-template.yaml: |
+    attendance:
+      api_port: "8081"
+    mysql:
+      db_name: "attendance_db"
+      host: "mysql"
+      username: "admin"
+      password: "${MYSQL_PASSWORD}"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: attendance
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: attendance
+  template:
+    metadata:
+      labels:
+        app: attendance
+    spec:
+      initContainers:
+        - name: create-config
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              sed "s/\${MYSQL_PASSWORD}/$(cat /secret/mysql-password)/g" \
+                /template/config-template.yaml > /generated/config.yaml
+          volumeMounts:
+            - name: config-template
+              mountPath: /template
+            - name: mysql-secret
+              mountPath: /secret
+              readOnly: true
+            - name: generated-config
+              mountPath: /generated
+      containers:
+        - name: attendance
+          image: yogeshindoria/ot-empms-attendance:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+          env:
+            - name: CONFIG_FILE
+              value: /app/config/config.yaml
+          volumeMounts:
+            - name: generated-config
+              mountPath: /app/config
+              readOnly: true
+      volumes:
+        - name: config-template
+          configMap:
+            name: attendance-config-template
+        - name: mysql-secret
+          secret:
+            secretName: mysql-secret
+            items:
+              - key: mysql-password
+                path: mysql-password
+        - name: generated-config
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: attendance
+spec:
+  selector:
+    app: attendance
+  ports:
+    - port: 8081
+      targetPort: 8081
+  type: ClusterIP
